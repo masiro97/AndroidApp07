@@ -25,9 +25,10 @@ import java.util.Locale;
  */
 
 
-public class RestAdapter extends BaseAdapter implements Filterable{
+public class RestAdapter extends BaseAdapter implements Filterable {
 
     private boolean mCheckBoxState = false;
+    private boolean checkboxstate = false;
     ArrayList<Data> arr = new ArrayList<Data>();
     ArrayList<Data> filtered = arr;
     Filter listFilter;
@@ -45,13 +46,18 @@ public class RestAdapter extends BaseAdapter implements Filterable{
     public RestAdapter(Context context, ArrayList<Data> arr) {
         this.context = context;
         this.arr = arr;
+        this.filtered = arr;
     }
 
     @Override
-    public int getCount() {return filtered.size();}
+    public int getCount() {
+        return filtered.size();
+    }
 
     @Override
-    public Object getItem(int position) {return filtered.get(position);}
+    public Object getItem(int position) {
+        return filtered.get(position);
+    }
 
     @Override
     public long getItemId(int position) {
@@ -64,21 +70,23 @@ public class RestAdapter extends BaseAdapter implements Filterable{
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.list_item, null);
         }
-
         TextView t1 = (TextView) convertView.findViewById(R.id.textView);
         TextView t2 = (TextView) convertView.findViewById(R.id.textView2);
         ImageView img = (ImageView) convertView.findViewById(R.id.imageView);
-        cbox = (CheckBox)convertView.findViewById(R.id.checkBox);
+        cbox = (CheckBox) convertView.findViewById(R.id.checkBox);
 
         final Data data = filtered.get(position);
-        if(parameter == 0){
+        if (parameter == 0) {
             cbox.setChecked(false);
             data.selected = false;
         }
-        if(mCheckBoxState){
-            if(cbox.isChecked()) data.selected = true;
+        if (mCheckBoxState) {
+            if (cbox.isChecked()) data.selected = true;
             else data.selected = false;
         }
+
+        if (checkboxstate) cbox.setVisibility(CheckBox.VISIBLE);
+        else cbox.setVisibility(CheckBox.INVISIBLE);
         t1.setText(data.getName());
         t2.setText(data.getDial());
         if (data.getCategory() == CHICKEN) img.setImageResource(R.drawable.chicken);
@@ -109,7 +117,8 @@ public class RestAdapter extends BaseAdapter implements Filterable{
         if (sortType == NAME_ASC) {
             Collections.sort(arr, nameAsc);
             this.notifyDataSetChanged();
-        } else if (sortType == KIND_ASC) {
+        }
+        else if (sortType == KIND_ASC) {
             Collections.sort(arr, kindAsc);
             this.notifyDataSetChanged();
         }
@@ -120,28 +129,30 @@ public class RestAdapter extends BaseAdapter implements Filterable{
         notifyDataSetChanged();
     }
 
+    public void isCheckBoxState(boolean state) {
+        checkboxstate = state;
+        notifyDataSetChanged();
+    }
 
     @Override
     public Filter getFilter() {
-        if(listFilter == null) listFilter =  new ListFilter();
+        if (listFilter == null) listFilter = new ListFilter();
         return listFilter;
     }
 
-    private class ListFilter extends Filter{
+    private class ListFilter extends Filter {
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-
-            if(constraint ==null || constraint.length() ==0){
+            if (constraint == null || constraint.length() == 0) {
                 results.values = arr;
                 results.count = arr.size();
-            }
-            else{
+            } else {
                 ArrayList<Data> itemList = new ArrayList<Data>();
 
-                for(Data data : arr){
-                    if(data.getName().toUpperCase().contains(constraint.toString().toUpperCase()))
+                for (Data data : arr) {
+                    if (data.getName().toUpperCase().contains(constraint.toString().toUpperCase()))
                         itemList.add(data);
                 }
                 results.values = itemList;
@@ -152,8 +163,8 @@ public class RestAdapter extends BaseAdapter implements Filterable{
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filtered = (ArrayList<Data>)results.values;
-            if(results.count >0) notifyDataSetChanged();
+            filtered = (ArrayList<Data>) results.values;
+            if (results.count >= 0) notifyDataSetChanged();
             else notifyDataSetInvalidated();
         }
     }

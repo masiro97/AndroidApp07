@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,14 +53,7 @@ public class MainActivity extends AppCompatActivity {
         b3 = (Button) findViewById(R.id.button3);
         et = (EditText) findViewById(R.id.editText);
         adapter = new RestAdapter(this, info);
-        list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         list.setAdapter(adapter);
-        info.add(new Data("apple"));
-        info.add(new Data("tomato"));
-        info.add(new Data("potato"));
-        info.add(new Data("melon"));
-        info.add(new Data("melon2"));
-        info.add(new Data("melon3"));
 
         et.addTextChangedListener(new TextWatcher() {
             @Override
@@ -77,10 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String search = s.toString();
-                if(search.length() >0) list.setFilterText(search);
-                else list.clearTextFilter();
-                //((RestAdapter)list.getAdapter()).getFilter().filter(search) ;
-
+                ((RestAdapter)list.getAdapter()).getFilter().filter(search) ;
             }
         });
         b3.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 number_of_set = number_of_set + 1;
                 if (number_of_set % 2 == 1) {
                     b3.setText("삭제");
+                    adapter.isCheckBoxState(true);
                     adapter.parameter = 1;
                 } else {
                     b3.setText("선택");
@@ -99,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                             .setNegativeButton("확인", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    for (int i = 0; i < info.size(); i++) {
+                                    for (int i = info.size()-1; i >= 0; i--) {
                                         Data data = info.get(i);
                                         if (data.IsSelected()) {
                                             info.remove(data);
@@ -110,15 +100,14 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             })
                             .show();
+                    adapter.isCheckBoxState(false);
                 }
                 adapter.notifyDataSetChanged();
             }
         });
     }
-
     public void SetListView() {
 
-        adapter.notifyDataSetChanged();
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -135,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 dataset = data.getParcelableExtra("msg");
                 info.add(dataset);
+                adapter.notifyDataSetChanged();
                 SetListView();
             }
         }

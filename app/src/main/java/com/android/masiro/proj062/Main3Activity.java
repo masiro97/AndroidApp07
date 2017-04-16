@@ -27,11 +27,8 @@ public class Main3Activity extends AppCompatActivity {
 
     public void OnButton(View v){
         if(v.getId() == R.id.imageButton){
-
             Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:/" +data.getDial()));
             startActivity(intent);
-
-
         }
         else if(v.getId() == R.id.imageButton2){
 
@@ -70,7 +67,6 @@ public class Main3Activity extends AppCompatActivity {
         t8.setText(data.getHome().toString());
         t10.setText(data.getDate().toString());
         SetImage(data.getCategory());
-
     }
 
     public void SetImage(int c){
