@@ -47,7 +47,7 @@
 
     <EditText
         android:id="@+id/editText"
-        android:drawableLeft="@android:mipmap/sym_def_app_icon"
+        android:drawableLeft="@android:drawable/ic_lock_lock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -57,13 +57,11 @@
 
     <ListView
         android:id="@+id/listview"
+        android:textFilterEnabled="true"
+        android:dividerHeight="1dp"
+        android:divider="#f00"
         android:layout_width="match_parent"
-        android:layout_height="191dp" />
+        android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
 
 </LinearLayout>

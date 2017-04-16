@@ -2,30 +2,31 @@ package com.android.masiro.proj062;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
     final int _REQUEST_MSG_CODE = 10;
     final int _REQUEST_MSG_CODE_SECOND = 100;
-    Button b3,b4;
     ListView list;
+    Button b3;
+    EditText et;
     ArrayList<Data> info = new ArrayList<Data>(); //데이터 세트
-    ArrayList<Boolean> position = new ArrayList<Boolean>();
     RestAdapter adapter; //Custom Adapter
     Data dataset; //현재 데이터
     int number_of_set = 0;
@@ -42,38 +43,77 @@ public class MainActivity extends AppCompatActivity {
             //종류별
             adapter.setSort(adapter.KIND_ASC);
         }
-        else if(v.getId() == R.id.button3){
-            number_of_set++;
-            if (number_of_set % 2 == 1) {
-                b3.setText("삭제"); adapter.setCheckBoxState(true);
-            } else {
-                b3.setText("선택"); adapter.setCheckBoxState(false);
-            }
-        }
-
-        else if(v.getId() == R.id.button4){
-            ArrayList<Data> temp = adapter.arr;
-            for (int i = 0; i < temp.size(); i++) {
-                Data data = temp.get(i);
-                if (data.selected == true) info.remove(data);
-            }
-            adapter.notifyDataSetChanged();
-
-        }
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         list = (ListView) findViewById(R.id.listview);
+        b3 = (Button) findViewById(R.id.button3);
+        et = (EditText) findViewById(R.id.editText);
         adapter = new RestAdapter(this, info);
+        list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         list.setAdapter(adapter);
-        info.add(new Data("d"));
-        info.add(new Data("d2"));
-        info.add(new Data("d3"));
-        info.add(new Data("d4"));
+        info.add(new Data("apple"));
+        info.add(new Data("tomato"));
+        info.add(new Data("potato"));
+        info.add(new Data("melon"));
+        info.add(new Data("melon2"));
+        info.add(new Data("melon3"));
 
+        et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String search = s.toString();
+                if(search.length() >0) list.setFilterText(search);
+                else list.clearTextFilter();
+                //((RestAdapter)list.getAdapter()).getFilter().filter(search) ;
+
+            }
+        });
+        b3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                number_of_set = number_of_set + 1;
+                if (number_of_set % 2 == 1) {
+                    b3.setText("삭제");
+                    adapter.parameter = 1;
+                } else {
+                    b3.setText("선택");
+                    adapter.setCheckBox(true);
+                    AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
+                    dlg.setTitle("삭제하시겠습니까?")
+                            .setPositiveButton("닫기", null)
+                            .setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    for (int i = 0; i < info.size(); i++) {
+                                        Data data = info.get(i);
+                                        if (data.IsSelected()) {
+                                            info.remove(data);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                    adapter.parameter = 0;
+                                }
+                            })
+                            .show();
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void SetListView() {
