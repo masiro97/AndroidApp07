@@ -20,7 +20,7 @@ public class Data implements Parcelable{
     private String homepage;
     private String date;
     private int category;
-
+    public boolean selected;
 
     public Data(String name, String dial, ArrayList<String>menu, String homepage, String date, int category){
         this.name = name;
@@ -29,6 +29,16 @@ public class Data implements Parcelable{
         this.homepage = homepage;
         this.date = date;
         this.category = category;
+        this.selected = false;
+    }
+    public Data(String name){
+        this.name = name;
+        this.dial = "";
+        this.menu = null;
+        this.homepage = "";
+        this.date = "";
+        this.category = 0;
+        this.selected = false;
     }
 
     public Data(Parcel src){
@@ -41,6 +51,7 @@ public class Data implements Parcelable{
         this.homepage = "null";
         this.date = "null";
         this.category = 0;
+        this.selected = false;
 
     }
     public void setData(String name, String dial, ArrayList<String> menu, String homepage, String date, int category){
@@ -51,6 +62,7 @@ public class Data implements Parcelable{
         this.homepage = homepage;
         this.date = date;
         this.category = category;
+        this.selected = false;
     }
 
     public String getHome(){
@@ -71,6 +83,7 @@ public class Data implements Parcelable{
     public ArrayList<String> getMenu(){
         return this.menu;
     }
+    public boolean IsSelected(){return this.selected;}
     @Override
     public int describeContents() {
         return 0;
