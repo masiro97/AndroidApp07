@@ -140,26 +140,27 @@ public class RestAdapter extends BaseAdapter implements Filterable {
         return listFilter;
     }
 
-    private class ListFilter extends Filter {
+        private class ListFilter extends Filter {
 
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults results = new FilterResults();
-            if (constraint == null || constraint.length() == 0) {
-                results.values = arr;
-                results.count = arr.size();
-            } else {
-                ArrayList<Data> itemList = new ArrayList<Data>();
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                if (constraint == null || constraint.length() == 0) {
+                    results.values = arr;
+                    results.count = arr.size();
+                } else {
+                    ArrayList<Data> itemList = new ArrayList<Data>();
 
-                for (Data data : arr) {
-                    if (data.getName().toUpperCase().contains(constraint.toString().toUpperCase()))
-                        itemList.add(data);
+                    for (Data data : arr) {
+                        if (data.getName().toUpperCase().contains(constraint.toString()
+                                .toUpperCase()))
+                            itemList.add(data);
+                    }
+                    results.values = itemList;
+                    results.count = itemList.size();
                 }
-                results.values = itemList;
-                results.count = itemList.size();
+                return results;
             }
-            return results;
-        }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
