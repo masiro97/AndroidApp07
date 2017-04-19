@@ -96,11 +96,12 @@ public class MainActivity extends AppCompatActivity {
                                             adapter.notifyDataSetChanged();
                                         }
                                     }
-                                    adapter.parameter = 0;
+
                                 }
                             })
                             .show();
                     adapter.isCheckBoxState(false);
+                    adapter.parameter = 0;
                 }
                 adapter.notifyDataSetChanged();
             }
