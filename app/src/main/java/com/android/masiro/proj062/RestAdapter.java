@@ -102,7 +102,7 @@ public class RestAdapter extends BaseAdapter implements Filterable {
     Comparator<Data> nameAsc = new Comparator<Data>() {
         @Override
         public int compare(Data o1, Data o2) {
-            return o1.getName().compareTo(o2.getName());
+            return o1.getName().compareToIgnoreCase(o2.getName());
         }
     };
 
